@@ -5,7 +5,8 @@ WO.instrumentKeyHandler = {
 
   create: function(instrument){
     $(document).on('keydown', function(e){
-      var note = getKey(e);
+      var note = getKey(e, false);
+      var noteKeyPress = getKey(e, true);
 
       if( e.which === 88 || e.which === 90 ){
         setOctave(e.which);
@@ -21,13 +22,14 @@ WO.instrumentKeyHandler = {
           this.keyDown[note] = true;
         }
         // trigger pianoKeyOn on piano keyboard
-        $('body').trigger('pianoKeyOn', [note]);
+        $('body').trigger('pianoKeyOn', [noteKeyPress]);
       }
     }.bind(this));
 
     $(document).on('keyup', function(e){
       var currTrack;
-        var note = getKey(e);
+      var note = getKey(e, false);
+      var noteKeyPress = getKey(e, true);
 
         if (e.which === 46) {
           currTrack = WO.appView.songView.collection.settings.activeTrack;
@@ -46,35 +48,43 @@ WO.instrumentKeyHandler = {
             }
             this.keyDown[note] = null;
             //trigger pianoKeyOff on piano keyboard
-            $('body').trigger('pianoKeyOff', [note]);
+            $('body').trigger('pianoKeyOff', [noteKeyPress]);
         }
     }.bind(this));
 
     var keyMap = {
-       65 : ["C",  0],
-       87 : ["C#", 0],
-       83 : ["D",  0],
-       69 : ["Eb", 0],
-       68 : ["E",  0],
-       70 : ["F",  0],
-       84 : ["F#", 0],
-       71 : ["G",  0],
-       89 : ["G#", 0],
-       72 : ["A",  0],
-       85 : ["Bb", 0],
-       74 : ["B",  0],
-       75 : ["C",  1],
-       79 : ["C#", 1],
-       76 : ["D",  1],
-       80 : ["Eb", 1],
-      186 : ["E",  1],
-      222 : ["F",  1]
+       65 : ["C",  0, "C"],
+       87 : ["C#", 0, "Db"],
+       83 : ["D",  0, "D"],
+       69 : ["Eb", 0, "Eb"],
+       68 : ["E",  0, "E"],
+       70 : ["F",  0, "F"],
+       84 : ["F#", 0, "Gb"],
+       71 : ["G",  0, "G"],
+       89 : ["G#", 0, "Ab"],
+       72 : ["A",  0, "A"],
+       85 : ["Bb", 0, "Bb"],
+       74 : ["B",  0, "B"],
+       75 : ["C",  1, "C"],
+       79 : ["C#", 1, "Db"],
+       76 : ["D",  1, "D"],
+       80 : ["Eb", 1, "Eb"],
+      186 : ["E",  1, "E"],
+      222 : ["F",  1, "F"]
     };
 
-    var getKey = function(event){
+  // Secondary map determines which mapping to send as a boolean.
+    var getKey = function(event, secondaryMap){
         var note;
+
         if( keyMap[event.which] ){
-          note = keyMap[event.which][0] + (instrument.octave + keyMap[event.which][1]);
+
+          if(secondaryMap){
+            note = keyMap[event.which][2] + (instrument.octave + keyMap[event.which][1]);
+          } else {
+            note = keyMap[event.which][0] + (instrument.octave + keyMap[event.which][1]);
+          }
+
         }else{
           note = null;
         }
