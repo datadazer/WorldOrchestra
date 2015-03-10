@@ -13,17 +13,17 @@ WO.SynthFactory = function(){
             "rolloff": -24
         },
         "envelope": {
-            "attack": 0.005,
-            "decay": 0.01,
+            "attack": 0.05,
+            "decay": 2,
             "sustain": 0.9,
-            "release": 0.001
+            "release": 0.1
         },
         "filterEnvelope": {
             "attack": 0.006,
             "decay": 0.02,
             "sustain": 0.5,
-            "release": 0.001,
-            "min": 10,
+            "release": 1,
+            "min": 100,
             "max": 4000
         }
     };
@@ -32,8 +32,7 @@ WO.SynthFactory = function(){
     synth.set(synthOptions);
 
     synth.octave = 4;
-    synth.setVolume(-25);
-    synth.title = "Synth";
+    synth.setVolume(-30);
     synth.toMaster();
     synth.title = "Synth";
 
